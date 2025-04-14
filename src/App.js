@@ -23,7 +23,7 @@ function App() {
   useEffect(() => {
     if (!isOnline) return;
 
-    const socket = new WebSocket('wss://offline-final.onrender.com');; // Skip if offline-only
+    const socket = new WebSocket('wss://offline-final.onrender.com'); // Skip if offline-only
     socketRef.current = socket;
 
     socket.onopen = () => {
