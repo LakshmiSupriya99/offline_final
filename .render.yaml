@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: offline_final
+    env: node
+    buildCommand: npm run build
+    startCommand: npm start
