@@ -23,7 +23,7 @@ function App() {
   useEffect(() => {
     if (!isOnline) return;
 
-    const socket = new WebSocket('wss://https://lakshmisupriya99.github.io/offline_final/'); // Skip if offline-only
+    const socket = new WebSocket(''ws://localhost:5000''); // Skip if offline-only
     socketRef.current = socket;
 
     socket.onopen = () => {
