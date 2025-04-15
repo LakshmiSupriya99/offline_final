@@ -82,7 +82,8 @@ function App() {
         }
       };
     }
-  }, [isOnline]);
+  }, [handleCursorMove, isOnline]);  // Add handleCursorMove here
+  
 
   return (
     <div className="App">
