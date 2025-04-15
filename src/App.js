@@ -44,6 +44,7 @@ function App() {
     };
 
     socket.onclose = () => setTimeout(() => window.location.reload(), 3000);
+    socket.onerror = (error) => console.error('WebSocket error:', error);
 
     return () => socket.close();
   }, [isOnline]);
@@ -58,6 +59,31 @@ function App() {
     }
   };
 
+  const handleCursorMove = () => {
+    const { selectionStart, selectionEnd } = textareaRef.current;
+    const cursorPosition = { x: selectionStart, y: selectionEnd };
+    if (isOnline && socketRef.current?.readyState === WebSocket.OPEN) {
+      socketRef.current.send(JSON.stringify({
+        type: 'cursor',
+        clientId,
+        position: cursorPosition,
+      }));
+    }
+  };
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      const textareaElement = textareaRef.current;
+      textareaElement.addEventListener('mousemove', handleCursorMove);
+      
+      return () => {
+        if (textareaElement) {
+          textareaElement.removeEventListener('mousemove', handleCursorMove);
+        }
+      };
+    }
+  }, [isOnline]);
+
   return (
     <div className="App">
       <h1>Collaborative Editor {isOnline ? '🟢 Online' : '🔴 Offline'}</h1>
@@ -68,6 +94,25 @@ function App() {
         rows="20"
         cols="80"
       />
+      <div className="cursors">
+        {Object.keys(cursors).map(clientId => {
+          const cursor = cursors[clientId];
+          return (
+            <div
+              key={clientId}
+              className="cursor"
+              style={{
+                position: 'absolute',
+                top: `${cursor.y}px`, 
+                left: `${cursor.x}px`,
+                backgroundColor: cursor.color,
+                width: '5px',
+                height: '5px',
+              }}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }

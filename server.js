@@ -10,8 +10,8 @@ app.use(cors());
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-let documentContent = ""; 
-let cursors = {}; 
+let documentContent = ""; // Store the document content
+let cursors = {}; // Store cursors of each client
 
 const colors = ["red", "blue", "green", "purple", "orange", "pink", "cyan"];
 const getRandomColor = () => colors[Math.floor(Math.random() * colors.length)];
@@ -66,6 +66,8 @@ wss.on('connection', (ws) => {
 
 // Serve React build
 app.use(express.static(path.join(__dirname, 'build')));
+
+// Handle any other routes by serving index.html (React app)
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
